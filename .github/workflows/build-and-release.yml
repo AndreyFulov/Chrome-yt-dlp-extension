@@ -1,0 +1,106 @@
+name: Build and release
+
+on:
+  pull_request:
+  push:
+    branches:
+      - '**'
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, macos-26-intel]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version: 'stable'
+          cache: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test native helper
+        working-directory: backend
+        shell: pwsh
+        run: |
+          go test ./...
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          go vet ./...
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Check extension JavaScript
+        shell: pwsh
+        run: |
+          Get-ChildItem -LiteralPath frontend -Filter '*.js' -File -Recurse | ForEach-Object {
+            node --check $_.FullName
+            if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          }
+
+  release:
+    name: Publish release archives
+    needs: checks
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version: 'stable'
+          cache: false
+      - name: Check release version
+        shell: pwsh
+        run: |
+          $version = (Get-Content frontend/manifest.json -Raw | ConvertFrom-Json).version
+          if ($env:GITHUB_REF_NAME -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+$' -or $env:GITHUB_REF_NAME -cne "v$version") {
+            throw "Release tag $env:GITHUB_REF_NAME must match the extension version v$version."
+          }
+      - name: Build and verify archives
+        shell: pwsh
+        run: |
+          ./backend/package.ps1
+          foreach ($platform in 'windows-amd64', 'darwin-amd64', 'darwin-arm64') {
+            $name = "ytdlp-chrome-$platform"
+            $archive = [IO.Compression.ZipFile]::OpenRead((Resolve-Path "dist/$name.zip").Path)
+            try {
+              $hostName = if ($platform -eq 'windows-amd64') { 'host.exe' } else { 'host' }
+              $installer = if ($platform -eq 'windows-amd64') { 'install.ps1' } else { 'install-macos.sh' }
+              foreach ($file in 'README.md', 'LICENSE', 'frontend/manifest.json', "backend/$hostName", "backend/$installer") {
+                if (-not $archive.GetEntry("$name/$file")) {
+                  throw "Missing $file in $name.zip"
+                }
+              }
+            } finally {
+              $archive.Dispose()
+            }
+          }
+      - name: Publish GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $assets = @(
+            'dist/ytdlp-chrome-windows-amd64.zip'
+            'dist/ytdlp-chrome-darwin-amd64.zip'
+            'dist/ytdlp-chrome-darwin-arm64.zip'
+            'dist/SHA256SUMS.txt'
+          )
+          gh release create $env:GITHUB_REF_NAME @assets --verify-tag --generate-notes
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }

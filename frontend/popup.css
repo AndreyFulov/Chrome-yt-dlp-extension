@@ -1,0 +1,40 @@
+:root {
+  color-scheme: light dark;
+  font: 14px/1.45 system-ui, sans-serif;
+  --line: color-mix(in srgb, CanvasText 18%, Canvas);
+}
+body { width: 360px; margin: 0; color: CanvasText; background: Canvas; }
+main { padding: 18px; }
+.panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.panel-header img { flex: none; }
+.panel-header h1 { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+.preferences { margin: 0 0 14px; padding: 0; border: 0; }
+.language-setting { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.language-setting select { width: auto; margin: 0; padding: 6px 10px; }
+h1, h2, p, dl { margin: 0 0 10px; }
+h1 { font-size: 21px; line-height: 1.2; margin-bottom: 12px; }
+h2 { font-size: 14px; }
+p, dd { overflow-wrap: anywhere; }
+.muted { color: color-mix(in srgb, CanvasText 72%, Canvas); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+form, section, details { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.selectors { display: grid; grid-template-columns: 90px 1fr; gap: 12px; margin-bottom: 12px; }
+.destination { margin-bottom: 12px; }
+label, select, .primary, progress { display: block; width: 100%; }
+label { font-weight: 600; min-width: 0; }
+select { margin-top: 6px; padding: 7px 4px; }
+progress { margin-bottom: 10px; accent-color: #3b71dc; }
+button, select { border: 1px solid var(--line); border-radius: 10px; font: inherit; background: color-mix(in srgb, Canvas 95%, CanvasText); color: CanvasText; }
+button { padding: 7px 12px; cursor: pointer; }
+button:hover:enabled { border-color: color-mix(in srgb, CanvasText 42%, Canvas); }
+button:disabled { cursor: default; opacity: .65; }
+.primary { background: #bd1332; border-color: #bd1332; color: white; font-weight: 650; }
+.primary:hover:enabled { background: #97112b; }
+summary { cursor: pointer; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin-top: 10px; }
+dd { margin: 0; }
+footer { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+footer a { display: inline-flex; align-items: center; gap: 7px; color: CanvasText; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+footer svg { width: 16px; height: 16px; }
+[hidden] { display: none !important; }

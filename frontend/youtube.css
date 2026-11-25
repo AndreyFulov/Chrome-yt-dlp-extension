@@ -1,0 +1,41 @@
+.ytdlp-extension-download {
+  align-self: center;
+  flex: 0 0 auto;
+  height: 36px;
+  margin-inline: 4px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--yt-spec-badge-chip-background, #eee);
+  color: var(--yt-spec-text-primary, #111);
+  font: 500 14px Roboto, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.ytdlp-extension-download:hover {
+  background: var(--yt-spec-touch-response, #ddd);
+}
+
+.ytdlp-extension-download:focus-visible {
+  outline: 2px solid var(--yt-spec-call-to-action, #065fd4);
+  outline-offset: 2px;
+}
+
+.ytdlp-extension-menu {
+  position: fixed;
+  inset: auto;
+  box-sizing: border-box;
+  width: min(340px, calc(100vw - 16px));
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--yt-spec-10-percent-layer, #8888);
+  border-radius: 14px;
+  background: var(--yt-spec-base-background, Canvas);
+  color: var(--yt-spec-text-primary, CanvasText);
+  box-shadow: 0 8px 26px #0004;
+}
+
+.ytdlp-extension-menu:not(:popover-open) {
+  display: none !important;
+}

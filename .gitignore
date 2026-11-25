@@ -1,0 +1,28 @@
+# Local planning and development files
+/[Tt][Oo][Dd][Oo]*.md
+/AGENTS.md
+/.agents/
+/.codex/
+.idea/
+.vscode/
+
+# Build output and local work directories
+/dist/
+/.install-*/
+/.media-check-*/
+/.validation-tools/
+/backend/host
+/backend/host.exe
+/backend/tools/
+*.test
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+cookies.txt
+cookies-*.txt
+
+# Operating system metadata
+.DS_Store
+Thumbs.db

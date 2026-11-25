@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>chrome yt-dlp extension</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="locale.js" defer></script>
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="panel-header">
+      <img src="icons/icon48.png" width="32" height="32" alt="">
+      <h1>chrome yt-dlp extension</h1>
+    </header>
+    <details class="preferences">
+      <summary data-text="settings">Settings</summary>
+      <label class="language-setting">
+        <span data-text="language">Language</span>
+        <select id="language-select"><option value="en" lang="en">English</option><option value="ru" lang="ru">Русский</option></select>
+      </label>
+    </details>
+    <p id="page" class="muted"></p>
+    <p id="status" role="status"></p>
+    <div class="actions">
+      <button id="retry" type="button" data-text="retry" hidden></button>
+      <button id="cookies" type="button" data-text="cookies" hidden></button>
+    </div>
+    <form id="download-form" hidden>
+      <div class="selectors">
+        <label><span data-text="format"></span><select id="format"></select></label>
+        <label><span data-text="quality"></span><select id="quality"></select></label>
+      </div>
+      <div class="destination">
+        <p id="destination" aria-live="polite"></p>
+        <button id="choose-directory" type="button" data-text="chooseDirectory"></button>
+        <button id="reset-directory" type="button" data-text="resetDirectory" hidden></button>
+      </div>
+      <button class="primary" id="download" type="submit" data-text="download"></button>
+    </form>
+    <section id="job" aria-labelledby="job-heading" hidden>
+      <h2 id="job-heading" data-text="job"></h2>
+      <progress id="progress" max="100"></progress>
+      <p id="job-status" role="status"></p>
+      <button id="cancel" type="button" data-text="cancel" hidden></button>
+      <button id="retry-job" type="button" data-text="retryJob" hidden></button>
+    </section>
+    <details id="diagnostics" hidden>
+      <summary data-text="diagnostics"></summary>
+      <dl id="tools"></dl>
+    </details>
+  </main>
+</body>
+</html>
