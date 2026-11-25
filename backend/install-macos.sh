@@ -35,20 +35,34 @@ fi
 
 mkdir -p "$host_directory" "$manifests"
 if [ -n "$binary" ]; then
-    install -m 755 "$binary" "$host"
+    if ! cmp -s "$binary" "$host" || [ ! -x "$host" ]; then
+        install -m 755 "$binary" "$host"
+    fi
 else
     (cd "$source_directory" && go build -trimpath -o "$host" .)
 fi
 if [ -n "$tools" ]; then
     mkdir -p "$host_directory/tools"
     for tool in yt-dlp ffmpeg ffprobe deno; do
-        install -m 755 "$tools/$tool" "$host_directory/tools/$tool"
+        target="$host_directory/tools/$tool"
+        if ! cmp -s "$tools/$tool" "$target" || [ ! -x "$target" ]; then
+            install -m 755 "$tools/$tool" "$target"
+        fi
     done
 fi
 
 tmp_manifest=$(mktemp "$manifests/.ytdlp-manifest.XXXXXX")
 trap 'rm -f "$tmp_manifest"' EXIT
-"$host" --print-native-manifest > "$tmp_manifest"
+/usr/bin/osascript -l JavaScript -s h -e '
+function run(args) {
+    return JSON.stringify({
+        name: args[0],
+        description: "chrome yt-dlp extension local helper",
+        path: args[1],
+        type: "stdio",
+        allowed_origins: ["chrome-extension://ifjcfdebfppkjagopedodglfheiljeap/"]
+    });
+}' "$host_name" "$host" > "$tmp_manifest"
 test -s "$tmp_manifest"
 mv -f "$tmp_manifest" "$manifest"
 printf 'Installed %s\n' "$host_name"

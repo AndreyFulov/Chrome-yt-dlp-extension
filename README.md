@@ -41,6 +41,8 @@ The extension first requests formats without cookies. When YouTube requires sign
 
 The helper checks for tools in its installed `tools` directory, then on `PATH`. On macOS it also checks the standard Homebrew binary directories. Go is required for building from source. The same commands build the helper when run from a source checkout with Go 1.22 or newer and no prebuilt helper next to the installer.
 
+The prebuilt macOS helper is not notarized. If Gatekeeper blocks it when Chrome opens the extension, you can build the helper locally from a source checkout instead. [Apple’s guide to Gatekeeper](https://support.apple.com/en-us/102445)
+
 ### Update or uninstall
 
 - **Update.** Finish active downloads and quit Chrome. Download the new ZIP for your platform, run its helper installer, and replace the contents of the previously loaded `frontend` folder with the new `frontend` files. Launch Chrome, click **Reload** on the extension card in `chrome://extensions`, and refresh your YouTube tabs.
@@ -91,6 +93,8 @@ The extension and native helper are distributed under the [MIT License](LICENSE)
 4. Откройте `chrome://extensions`, включите **«Режим разработчика»**, нажмите **«Загрузить распакованное расширение»** и укажите папку `frontend`. Чтобы переключаться между русским и английским, откройте **chrome yt-dlp extension** на панели Chrome и выберите язык в настройках. [Инструкция Chrome по загрузке распакованного расширения](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)
 
 Помощник ищет инструменты в установленной папке `tools`, затем в `PATH`. На macOS он также проверяет стандартные каталоги Homebrew. Для сборки из исходников нужен Go 1.22 или новее. Те же команды соберут помощник при запуске из копии исходного кода, если рядом с установщиком нет готового файла помощника.
+
+Готовый помощник для macOS не нотаризован. Если Gatekeeper блокирует его при открытии расширения в Chrome, можно собрать помощник локально из исходников. [Справка Apple о Gatekeeper](https://support.apple.com/en-us/102445)
 
 ### Обновление и удаление
 

@@ -45,8 +45,12 @@ jobs:
         run: |
           scratch="$(mktemp -d)"
           mkdir "$scratch/Test Home"
-          go -C backend build -o "$scratch/host" .
+          printf '#!/bin/sh\nexit 99\n' > "$scratch/host"
           HOME="$scratch/Test Home" sh backend/install-macos.sh "$scratch/host"
+          installed="$scratch/Test Home/Library/Application Support/YtDlpChromeHost/host"
+          chmod 711 "$installed"
+          HOME="$scratch/Test Home" sh backend/install-macos.sh "$scratch/host"
+          test "$(stat -f %Lp "$installed")" = 711
           HOME="$scratch/Test Home" node <<'NODE'
           const assert = require('node:assert/strict');
           const fs = require('node:fs');
