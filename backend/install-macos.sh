@@ -48,11 +48,7 @@ fi
 
 tmp_manifest=$(mktemp "$manifests/.ytdlp-manifest.XXXXXX")
 trap 'rm -f "$tmp_manifest"' EXIT
-printf '{}\n' > "$tmp_manifest"
-/usr/bin/plutil -insert name -string "$host_name" "$tmp_manifest"
-/usr/bin/plutil -insert description -string 'chrome yt-dlp extension local helper' "$tmp_manifest"
-/usr/bin/plutil -insert path -string "$host" "$tmp_manifest"
-/usr/bin/plutil -insert type -string stdio "$tmp_manifest"
-/usr/bin/plutil -insert allowed_origins -json '["chrome-extension://ifjcfdebfppkjagopedodglfheiljeap/"]' "$tmp_manifest"
+"$host" --print-native-manifest > "$tmp_manifest"
+test -s "$tmp_manifest"
 mv -f "$tmp_manifest" "$manifest"
 printf 'Installed %s\n' "$host_name"

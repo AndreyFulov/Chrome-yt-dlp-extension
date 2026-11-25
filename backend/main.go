@@ -48,6 +48,23 @@ type tool struct {
 }
 
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "--print-native-manifest" {
+		path, err := os.Executable()
+		if err == nil {
+			err = json.NewEncoder(os.Stdout).Encode(map[string]any{
+				"name":            "com.ytdlp.downloader",
+				"description":     "chrome yt-dlp extension local helper",
+				"path":            path,
+				"type":            "stdio",
+				"allowed_origins": []string{"chrome-extension://ifjcfdebfppkjagopedodglfheiljeap/"},
+			})
+		}
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	configureToolPath()
 	cleanStaleCookies()
 	if err := serve(os.Stdin, os.Stdout, detectTools); err != nil {

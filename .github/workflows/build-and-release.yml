@@ -39,6 +39,26 @@ jobs:
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           go vet ./...
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Test macOS installer with an isolated home
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          scratch="$(mktemp -d)"
+          mkdir "$scratch/Test Home"
+          go -C backend build -o "$scratch/host" .
+          HOME="$scratch/Test Home" sh backend/install-macos.sh "$scratch/host"
+          HOME="$scratch/Test Home" node <<'NODE'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const support = path.join(process.env.HOME, 'Library/Application Support');
+          const manifest = JSON.parse(fs.readFileSync(path.join(support, 'Google/Chrome/NativeMessagingHosts/com.ytdlp.downloader.json'), 'utf8'));
+          assert.equal(manifest.name, 'com.ytdlp.downloader');
+          assert.equal(manifest.type, 'stdio');
+          assert.equal(fs.realpathSync(manifest.path), fs.realpathSync(path.join(support, 'YtDlpChromeHost/host')));
+          fs.accessSync(manifest.path, fs.constants.X_OK);
+          assert.deepEqual(manifest.allowed_origins, ['chrome-extension://ifjcfdebfppkjagopedodglfheiljeap/']);
+          NODE
       - name: Check extension JavaScript
         shell: pwsh
         run: |
