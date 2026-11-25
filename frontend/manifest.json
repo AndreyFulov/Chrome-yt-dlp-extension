@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "chrome yt-dlp extension",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "minimum_chrome_version": "127",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArY23BAKdUWOaV7KzX/TCO8Irffyefig7lf4r0zrJ1vYoO48Y7K1Uyr0Crrgb+NHJCgGNWdag8AjB7JVYML6FrStgiSEeFeiPPzGDbJsIUx35blZCa9XTB9vixqQW9tio4cspg9fWIH/+ncM13skQOSP29MVA/PjDK3jbl5g/Wrl9/zwnbxOjWarC9VBdybQKL+SB6K+H8U6SBq80BZGqGotFXDlBnnd1u25YI7mbPilktlpO2nn3ayPLTJ+BenX7nRaTjRa8VldFSp6LTb82iX8nHbEkUrhiwEJka2j2aGk1W73d9aHRtCwKWvJCBfN7MOaCuPtLmyyZOHUSWH9bDwIDAQAB",
   "permissions": ["activeTab", "nativeMessaging", "storage", "cookies"],
